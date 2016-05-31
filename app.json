@@ -1,0 +1,19 @@
+{
+  "name": "models.autodesk.io",
+  "description": "A Node.js server to create Autodesk View and Data API viewables without the need to create a server yourself",
+  "repository": "https://github.com/cyrillef/models.autodesk.io",
+  "logo": "https://avatars0.githubusercontent.com/u/8017462?v=3&s=200",
+  "keywords": [
+    "express",
+    "framework",
+    "lmv",
+    "web",
+    "rest",
+    "restful",
+    "router",
+    "app",
+    "api"
+  ],
+  "website": "https://developer.autodesk.com/",
+  "success_url": "/"
+}

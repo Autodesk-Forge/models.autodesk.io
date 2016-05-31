@@ -1,0 +1,63 @@
+{
+  "name": "models.autodesk.io",
+  "description": "A Node.js server to create Autodesk View and Data API viewables without the need to create a server yourself",
+  "homepage": "http://around-the-corner.typepad.com/",
+  "version": "1.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cyrillef/models.autodesk.io"
+  },
+  "bugs": {
+    "url": "https://github.com/cyrillef/models.autodesk.io/issues"
+  },
+  "author": "Cyrille Fauvel",
+  "contributors": [
+    "Cyrille Fauvel <cyrille@autodesk.com>"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">= 4.1.1",
+    "npm": ">= 2.15.5"
+  },
+  "scripts": {
+    "start": "node start.js",
+    "test": "node_modules/.bin/mocha --require test/support/env --reporter spec --bail --check-leaks test/"
+  },
+  "files": [
+    "LICENSE",
+    "README.md"
+  ],
+  "keywords": [
+    "express",
+    "framework",
+    "lmv",
+    "web",
+    "rest",
+    "restful",
+    "router",
+    "app",
+    "api"
+  ],
+  "dependencies": {
+    "async": ">= 1.2.0",
+    "body-parser": ">= 1.11.0",
+    "connect-multiparty": ">= 1.2.5",
+    "express": ">= 4.12.3",
+    "fs": ">= 0.0.2",
+    "gen-uid": "0.0.2",
+    "path": ">= 0.11.14",
+    "request": ">= 2.55.0",
+    "serve-favicon": ">= 0.0.2",
+    "unirest": ">= 0.4.0",
+    "util": ">= 0.10.3",
+    "view-and-data": "^2.0.0"
+  },
+  "devDependencies": {
+    "mocha": ">= 2.2.5",
+    "should": ">= 6.0.3",
+    "supertest": ">= 1.0.1",
+    "chai": "3.0.0",
+    "expect.js": ">= 0.3.1"
+  },
+  "optionalDependencies": {}
+}

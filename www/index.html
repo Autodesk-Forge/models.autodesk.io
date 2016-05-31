@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ADN Node.js Host Server Sample</title>
+
+    <!-- External libraries -->
+    <script src="https://code.jquery.com/jquery-2.1.2.js"></script>
+	<script src="/js/jquery.cookie.js"></script>
+	<!-- Bootstrap CSS -->
+	<link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css" rel="stylesheet" />
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+	<script src="/js/flipclock.min.js"></script>
+	<link href="/js/flipclock.css" rel="stylesheet" />
+
+    <script src="/js/ZeroClipboard.js"></script>
+
+    <script src="/js/filedrop.js"></script>
+
+    <!-- Our scripts -->
+	<script src="/main.js"></script>
+    <link href="/style.css" rel="stylesheet" />
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+            <div id="header_wrap" class="outer">
+                <header class="inner">
+                    <a id="forkme_banner" href="https://github.com/cyrillef/workflow-node.js-host-view.and.data.api">View sources on GitHub</a>
+
+                    <h1 id="project_title"><a href="http://developer-autodesk.github.io/">Developer Autodesk</a></h1>
+                    <h2 id="project_tagline">Large Model Viewer - View &amp; Data API</h2>
+                    <p id="project_tagline2">Just choose a model to upload on your account, or upload your own model.</p>
+                </header>
+            </div>
+		</div>
+	</nav>
+	
+	<section id="section-choose-models" class="scrollblock block-choose-models">
+
+		<div id="keysMainDiv" class="container">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Get an access token</h3>
+				</div>
+				<div class="panel-body">
+					<legend>Enter you Consumer Key and Consumer Secret to get a valid Access token</legend>
+					<div>
+						<img src="/images/warning.png" class="icon" />
+						<p>Sending Consumer key and secret via an http request is not recommended. Be aware of the 
+						risk of sending information like this. However, if you are using this tool only once in a while, it should be fine.</p>
+					</div>
+
+					<label for="key">Consumer Key:</label>
+					<input type="text" name="key" id="publicKey" class="form-control" value="" required="required" placeholder="Your consumer key" />
+
+					<label for="secret">Consumer Secret:</label>
+					<input type="password" name="secret" id="secretKey" class="form-control" value="" required="required" placeholder="Your consumer secret" />
+
+					<div class="divForBtnGetAccessToken">
+						<a class="btn btn-danger" id="btnGetAccessToken" data-toggle="modal" href='#modal-embeddingCode'>Get my access token</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="chooseModelsDiv" class="container">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Load Models on your account</h3>
+				</div>
+				<div class="panel-body">
+					<legend>Choose one of the model examples below,</legend>
+
+					<label for="inputModellist">Samples:</label>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <select name="modellist" id="inputModellist" class="form-control">
+                                <option value="">-- Select One --</option>
+                                <option value="samples/Chair.dwg">Chair</option>
+                                <option value="samples/Seat.dwf">Seat</option>
+                                <option value="samples/GateHouse.nwd">Gate House</option>
+                                <option value="samples/RobotArm.dwfx">Robot Arm</option>
+                                <option value="samples/Drill.dwfx">Drill</option>
+                            </select>
+					    </div>
+                        <div class="col-md-4">
+						    <a class="btn btn-primary" id="btnTranslateThisOne">Translate this one for me</a>
+                        </div>
+					</div>
+
+                    <br />
+                    <legend>or upload your own model.</legend>
+                    <!-- A FileDrop area. Can contain any text or elements, or be empty.
+                         Can be of any HTML tag too, not necessary fieldset.
+                    -->
+                    <fieldset id="zone" class="flow-drop">
+                        <p>Drag 'n Drop a file inside&hellip;</p>
+                        <p>Or click here to <em>Browse</em>..</p>
+                        <!--
+                        <p style="z-index: 10; position: relative">
+                        <input type="checkbox" id="multiple">
+                        <label for="multiple">Allow multiple selection</label>
+                        </p>
+                        -->
+                        <progress class="progress" id="bar_zone10" min="0" max="100"></progress>
+                    </fieldset>
+
+                    <div>
+                        <img src="/images/info.png" class="icon" />
+                        <span>Please note that your uploaded models are not visible for others. The list is saved into a cookie
+                            and will be removed from the list once you leave this session.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="myModelsDiv" class="container">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Available Models on your account</h3>
+                </div>
+                <div class="panel-body">
+                    <legend>List of translated models on your account loaded through that web site, during this session</legend>
+
+					<label>Currently translating...</label>
+					<div class="col-md-10 col-md-offset-1">
+                        <div id="translating" class="list-group"></div>
+                    </div>
+                    <div class="clear"></div>
+
+                    <br />
+                    <label style="float: left;">Ready:</label>
+                    <div class="clear"></div>
+                    <div class="col-md-10 col-md-offset-1">
+                        <div id="translated" class="list-group"></div>
+                    </div>
+                    <div class="clear"></div>
+
+                    <div>
+                        <img src="/images/warning.png" class="icon" />
+                        <p>Remember to save these urn by copying them before closing your session, otherwise you will lose the reference to your translated files.</p>
+                    </div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="accessTokenMainDiv" class="container">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">This is the token returned by the Autodesk View &amp; Data API serve</h3>
+				</div>
+				<div class="panel-body">
+					<div>
+						<img src="/images/info.png" class="icon" />
+						<p>The Access Token is currently saved into a cookie for the duration of your session and will expire in about 30 minutes.</p>
+					</div>
+
+					<label for="accessToken">Access Token:</label>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <input type="text" name="accessToken" id="accessToken" class="form-control" value="" required="required" readonly="true" />
+                        </div>
+                        <div class="col-md-4">
+    						<a class="btn btn-danger" id="btnReleaseAccessToken" data-toggle="modal" href='#modal-embeddingCode'>Release the Access Token</a>
+    					</div>
+                    </div>
+
+                    <div id="countdown"></div>
+                </div>
+			</div>
+		</div>
+		
+	</section>
+
+	<footer>
+		<p>Model as a Service, Accelerating Hackathons!</p>
+		<p>@<a href="http://www.autodesk.com/joinadn" target="_blank">Autodesk Developer Network</a></p>
+	</footer>
+
+
+    <div class="modal fade" role="dialog" id="modal-accesstoken">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Your Access Token has now expired</h4>
+                </div>
+                <div class="modal-body">
+                    <img src="/images/info.png" class="icon" />
+                    <span>You did not lose anything, but you need to refresh the token to continue</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" id="modal-translationfailed">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Your request to translate this file failed</h4>
+                </div>
+                <div class="modal-body">
+                    <img src="/images/warning.png" class="icon" />
+                    <span>???</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
