@@ -1,20 +1,20 @@
 //
-// Copyright (c) Autodesk, Inc. All rights reserved 
+// Copyright (c) Autodesk, Inc. All rights reserved
 //
-// Host Node.js server 
+// Host Node.js server
 // by Cyrille Fauvel - Autodesk Developer Network (ADN)
 // April 2015
 //
 // Permission to use, copy, modify, and distribute this software in
-// object code form for any purpose and without fee is hereby granted, 
-// provided that the above copyright notice appears in all copies and 
+// object code form for any purpose and without fee is hereby granted,
+// provided that the above copyright notice appears in all copies and
 // that both that copyright notice and the limited warranty and
-// restricted rights notice below appear in all supporting 
+// restricted rights notice below appear in all supporting
 // documentation.
 //
-// AUTODESK PROVIDES THIS PROGRAM "AS IS" AND WITH ALL FAULTS. 
+// AUTODESK PROVIDES THIS PROGRAM "AS IS" AND WITH ALL FAULTS.
 // AUTODESK SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTY OF
-// MERCHANTABILITY OR FITNESS FOR A PARTICULAR USE.  AUTODESK, INC. 
+// MERCHANTABILITY OR FITNESS FOR A PARTICULAR USE.  AUTODESK, INC.
 // DOES NOT WARRANT THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 //
@@ -38,7 +38,7 @@ $(document).ready (function () {
 	// Access Token request code
 	$('#btnGetAccessToken').click (function (evt) {
 		$.ajax ({
-			url: 'http://' + window.location.host + '/api/token',
+			url: window.location.protocol + '//' + window.location.host + '/api/token',
 			type: 'post',
 			data: JSON.stringify ({ 'key': $('#publicKey').val ().trim (), 'secret': $('#secretKey').val ().trim () }),
 			contentType: 'application/json',
@@ -51,7 +51,7 @@ $(document).ready (function () {
 			$.cookie ('accessToken', JSON.stringify (data), { expires: date }) ; //, secure: true }) ;
 		}) ;
 	}) ;
-	
+
 	$('#btnReleaseAccessToken').click (function (evt) {
 		oCountdown.stop () ;
 	}) ;
@@ -97,7 +97,7 @@ function HostSetupAccessToken (data) {
 	$('#accessToken').val (data.access_token) ;
 	$('#publicKey').val ('') ;
 	$('#secretKey').val ('') ;
-	
+
 	var now =new Date () ;
 	var to =new Date (data.expires_at) ;
 	var diff = (to.getTime () / 1000) - (now.getTime () / 1000) ;
@@ -120,7 +120,7 @@ function HostSetupAccessToken (data) {
 
 function HostResetAccessToken () {
 	$('#accessToken').val ('') ;
-	
+
 	$.cookie ('accessToken', null) ;
 	$.cookie ('models', null) ;
 
