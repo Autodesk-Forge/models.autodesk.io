@@ -55,7 +55,8 @@ router.post ('/token', function (req, res) {
 		.catch (function (error) {
 			if ( error.statusCode )
 				return (res.status (error.statusCode).end (error.statusMessage)) ;
-			res.status (500).end () ;
+			//res.status (500).end () ;
+		res.json (JSON.stringify (error).end ()) ;
 		})
 	;
 }) ;
