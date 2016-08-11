@@ -8,6 +8,15 @@
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://opensource.org/licenses/MIT)
 
 
+*Forge API*:
+[![oAuth2](https://img.shields.io/badge/oAuth2-v1-green.svg)](http://developer-autodesk.github.io/)
+[![Data-Management](https://img.shields.io/badge/Data%20Management-v1-green.svg)](http://developer-autodesk.github.io/)
+[![OSS](https://img.shields.io/badge/OSS-v2-green.svg)](http://developer-autodesk.github.io/)
+[![Model-Derivative](https://img.shields.io/badge/Model%20Derivative-v2-green.svg)](http://developer-autodesk.github.io/)
+[![Viewer](https://img.shields.io/badge/Forge%20Viewer-v2.10-green.svg)](http://developer-autodesk.github.io/)
+
+
+
 <b>Note:</b> For hosting this sample, you do not need any credentials. But anyone using the sample will need
 valid credentials for the translation / extraction process. Visit [the Forge WEB site](https://developer.autodesk.com) for
 instructions to get on-board.
@@ -31,42 +40,18 @@ This sample will go through all the required steps.
 
 ## Description
 
-This sample exercises and demonstrates the Autodesk View and Data API authorization, and the translation process
-mentioned in the Quick Start guide. It provides you a quick way to get file ready for viewing on your own account.
-
-It closely follows the steps described in the documentation:
-
-* http://developer.api.autodesk.com/documentation/v1/vs_quick_start.html
-
-In order to make use of this sample, you need to register your consumer key:
-
-* https://developer.autodesk.com > My Apps
-
-This provides the credentials to supply to the https requests on the Autodesk server.
+This sample exercises and demonstrates the Autodesk Forge API authorization, and translation process
+mentioned in the Quick Start guide. It provides you a quick way to get file ready for viewing on your own account
+without programming.
 
 
 ## Dependencies
 
-This sample is dependent of Node.js and few Node.js extensions which would update/install automatically via 'npm':
+This sample is dependent of Node.js and few Node.js extensions which would update/install automatically via 'npm'.
 
-1. Node.js
+1. Node.js - built on Chrome's JavaScript runtime for easily building fast, scalable network applications.
+   You can get Node.js from [here](http://nodejs.org/)
 
-    Node.js - built on Chrome's JavaScript runtime for easily building fast, scalable network applications.
-	You need at least version v0.10.0. You can get Node.js from [here](http://nodejs.org/)<br /><br />
-	Node.js modules:
-	```
-    "serve-favicon": ">= 0.0.2",
-    "express": ">= 4.12.3",
-    "request": ">= 2.55.0",
-    "connect-multiparty": ">= 1.2.5",
-    "body-parser": ">= 1.11.0",
-    "fs": ">= 0.0.2",
-    "unirest": ">= 0.4.0",
-    "util": ">= 0.10.3",
-    "path": ">= 0.11.14",
-    "async": ">= 1.2.0"
-	```
-		
 2. filedrop.js - A Self-contained cross-browser HTML5, legacy, AJAX, drag & drop JavaScript file upload, available [here](http://filedropjs.org/).
 
 3. flipclock.js - A flip clock javascript library, available [here](http://flipclockjs.com/).
@@ -79,9 +64,11 @@ This sample is dependent of Node.js and few Node.js extensions which would updat
 
 The sample was created using Node.js and javascript.
 
+
 ### Deploy on Heroku
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 
 ### Setup
 1. Download and install [Node.js](http://nodejs.org/) (that will install npm as well)
@@ -108,6 +95,7 @@ The sample was created using Node.js and javascript.
    application (like Skype, or IIS, or Apache, ...), you can use any other free port such as 8000, 3000, etc...
    But in the next section you would need to specify the port to use, i.e. http://localhost[:port]/
 
+
 ### Use of the sample
 
 Translating files
@@ -131,6 +119,7 @@ This sample is licensed under the terms of the [MIT License](http://opensource.o
 
 ## Written by
 
-Cyrille Fauvel (Autodesk Developer Network)<br />
-http://www.autodesk.com/adn<br />
-http://around-the-corner.typepad.com/<br />
+Cyrille Fauvel <br />
+Forge Developer Advocate <br />
+http://developer.autodesk.com/ <br />
+http://around-the-corner.typepad.com/ <br />

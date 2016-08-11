@@ -19,14 +19,21 @@
 // UNINTERRUPTED OR ERROR FREE.
 //
 var express =require ('express') ;
-var request =require ('request') ;
 var bodyParser =require ('body-parser') ;
 var fs =require ('fs') ;
-var async =require ('async') ;
-var lmv =require ('./lmv') ;
+var path =require ('path') ;
+var promisify =require ('es6-promisify') ;
+var stat =promisify (fs.stat) ;
+var readFile =promisify (fs.readFile) ;
 
-//var LmvConfig =require ('../node_modules/view-and-data/config-view-and-data') ;
-//var Lmv =require ('view-and-data') ;
+var ForgeOSS =require ('forge-oss') ;
+var ForgeModelDerivative =require ('forge-model-derivative') ;
+
+var config =require ('./credentials') ;
+
+var ossBuckets =new ForgeOSS.BucketsApi () ;
+var ossObjects =new ForgeOSS.ObjectsApi () ;
+var md =new ForgeModelDerivative.DerivativesApi () ;
 
 var router =express.Router () ;
 router.use (bodyParser.json ()) ;
@@ -34,94 +41,100 @@ router.use (bodyParser.json ()) ;
 router.get ('/translate/:urn/progress', function (req, res) {
 	var accessToken =req.query.accessToken ;
 	var urn =req.params.urn ;
-	new lmv.Lmv ('', accessToken).all (urn)
-		.on ('success', function (data) {
-			res.json (data) ;
+
+	//ForgeOSS.ApiClient.instance.authentications ['oauth2_application'].accessToken =accessToken ;
+	ForgeModelDerivative.ApiClient.instance.authentications ['oauth2_application'].accessToken =accessToken ;
+	md.getManifest (urn, {})
+		.then (function (data) {
+			res.json ({
+				status: data.status,
+				progress: data.progress,
+				urn: data.urn,
+				name: data.derivatives [0].name
+			}).end () ;
+			console.log ('Request: ' + data.status + ' (' + data.progress + ')') ;
 		})
-		.on ('fail', function (err) {
+		.catch (function (error) {
 			res.status (404).end () ;
-		})
-	;
-/*    var lmv =new Lmv (LmvConfig, accessToken) ;
-    lmv.getViewable (urn, 'all')
-        .then (function (response) {
-            res.json (data) ;
-        }).catch (function (e) {
-            res.status (404).end () ;
-        }) ;
-*/}) ;
+		}) ;
+}) ;
+
+function makeKey (file) {
+	var filename =path.basename (file) ;
+	return (filename) ;
+}
+
+function singleUpload (bucketKey, filename, total) {
+	var objectKey =makeKey (filename) ;
+	var readStream =fs.createReadStream (filename) ;
+	return (ossObjects.uploadObject (bucketKey, objectKey, total, readStream, {})) ;
+}
 
 router.post ('/translate', function (req, res) {
 	var accessToken =req.body.accessToken ;
-	var filename =req.body.file ;
-	var bucket =
+	var filename =path.normalize (__dirname + '/../' + req.body.file) ;
+	var bucketKey =
 		  'model'
 		+ new Date ().toISOString ().replace (/T/, '-').replace (/:+/g, '-').replace (/\..+/, '')
 		+ '-' + accessToken.toLowerCase ().replace (/\W+/g, '') ;
-	var policy ='transient' ;
 
-	async.waterfall ([
-		function (callbacks1) {
-			console.log ('createBucketIfNotExist') ;
-			new lmv.Lmv (bucket, accessToken).createBucketIfNotExist (policy)
-				.on ('success', function (data) {
-					console.log ('Bucket already or now exist!') ;
-					callbacks1 (null, data) ;
-				})
-				.on ('fail', function (err) {
-					console.log ('Failed to create bucket!') ;
-					callbacks1 (err) ;
-				})
-			;
-		},
+	ForgeOSS.ApiClient.instance.authentications ['oauth2_application'].accessToken =accessToken ;
+	ForgeModelDerivative.ApiClient.instance.authentications ['oauth2_application'].accessToken =accessToken ;
 
-		function (arg1, callbacks2) {
+	var stats ;
+	stat (filename)
+		.then (function (results) {
+			stats =results ;
+			console.log ('Create Bucket...') ;
+			var opts ={
+				"bucketKey": bucketKey,
+				"policyKey": 'transient'
+			} ;
+			var headers ={
+				'xAdsRegion': 'US'
+			} ;
+			return (ossBuckets.createBucket (opts, headers)) ;
+		})
+		.then (function (bucket) {
 			console.log ('async upload') ;
-
-			new lmv.Lmv (bucket, accessToken).uploadFile (filename)
-				.on ('success', function (data) {
-					console.log (filename + ' uploaded.') ;
-					callbacks2 (null, data) ;
-				})
-				.on ('fail', function (err) {
-					console.log ('Failed to upload ' + filename + '!') ;
-					callbacks2 (err) ;
-				})
-			;
-		},
-
-		function (arg1, callbacks3) {
+			var total =stats.size ;
+			var chunkSize =config.fileResumableChunk * 1024 * 1024 ;
+			if ( total <= chunkSize )
+				return (singleUpload (bucketKey, filename, total)) ;
+			//else
+			//	return (uploadFileAsChunks (bucketKey, filename, total, chunkSize)) ;
+		})
+		.then (function (data) {
 			console.log ('Launching translation') ;
-			var urn =arg1.objects [0].id ;
-			new lmv.Lmv (bucket, accessToken).register (urn)
-				.on ('success', function (data) {
-					console.log ('Translation requested.') ;
-					callbacks3 (null, data) ;
-				})
-				.on ('fail', function (err) {
-					console.log ('Failed to request translation!') ;
-					callbacks3 (err) ;
-				})
-			;
-		}
-
-	], function (err, results) {
-		if ( err != null ) {
-			if ( err.hasOwnProperty ('statusCode') && err.statusCode != 200 )
-				return (res.status (err.statusCode).send (err.body.reason)) ;
-			if ( err.hasOwnProperty ('body') && !err.body.hasOwnProperty ('key') )
-				return (res.status (500).send ('The server did not return a valid key')) ;
-			return (res.status (500).send ('An unknown error occurred!')) ;
-		}
-
-		res.json (results) ;
-	}) ;
-
-	//res.status (500).send ('Something broke!') ;
-	/*res.json ({ 'stat'
-
-	}) ;*/
-
+			var job ={
+				"input": {
+					"urn": new Buffer (data.objectId).toString ('base64'),
+					"compressedUrn": false,
+					"rootFilename": data.objectKey
+				},
+				"output": {
+					"formats": [
+						{
+							"type": "svf",
+							"views": [
+								"2d",
+								"3d"
+							]
+						}
+					]
+				}
+			} ;
+			return (md.translate (job, { 'xAdsForce': true })) ;
+		})
+		.then (function (results) {
+			res.json (results) ;
+		})
+		.catch (function (error) {
+			console.log (JSON.stringify (error)) ;
+			res.status (500).end () ;
+		})
+	;
 }) ;
+
 
 module.exports =router ;

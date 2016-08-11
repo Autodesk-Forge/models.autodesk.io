@@ -49,6 +49,11 @@ $(document).ready (function () {
 			data.expires_at =date.toString () ;
 			HostSetupAccessToken (data) ;
 			$.cookie ('accessToken', JSON.stringify (data), { expires: date }) ; //, secure: true }) ;
+		}).fail (function (jqXHR, textStatus) {
+			alert ('Server replied: ' + jqXHR.responseText.replace(/&#([0-9]{1,3});/gi, function(match, numStr) {
+				var num =parseInt (numStr, 10) ; // read num as normal number
+				return (String.fromCharCode (num)) ;
+			})) ;
 		}) ;
 	}) ;
 
@@ -131,6 +136,7 @@ function HostResetAccessToken () {
 }
 
 function HostSetupTranslated (data) {
+	data =data.filter (function (value) { return (value.hasOwnProperty ('urn')) ; }) ;
 	for ( var i =0 ; i < data.length ; i++ ) {
 		var id =data [i].urn.replace (/=+/g, '') ;
 		translatedItem (id, data [i].item, data [i].urn) ;
@@ -138,6 +144,7 @@ function HostSetupTranslated (data) {
 }
 
 function translate (filename) {
+	$('#modal-translationrequested').modal ('show') ;
 	var accessToken =$.cookie ('accessToken') ;
 	accessToken =JSON.parse (accessToken) ;
 
@@ -158,7 +165,9 @@ function translate (filename) {
 			+ '<span>' + fn + '</span><progress min="0" max="100" value="0" />'
 			+ '</div>') ;
 		setTimeout (function () { translateProgress (data.urn) ; }, 5000) ;
+		$('#modal-translationrequested').modal ('hide') ;
 	}).fail (function (xhr, ajaxOptions, thrownError) {
+		$('#modal-translationrequested').modal ('hide') ;
 		$('#modal-translationfailed').modal ('show') ;
 	}) ;
 }
@@ -177,7 +186,7 @@ function translateProgress (urn) {
 		var id =response.urn.replace (/=+/g, '') ;
 		if ( response.progress == 'complete' ) {
 			$('#' + id).remove () ;
-			translatedItem (id, response.children [0].name, response.urn) ;
+			translatedItem (id, response.name, response.urn) ;
 		} else {
 			$('#' + id + ' progress').val (parseInt (response.progress)) ;
 			setTimeout (function () { translateProgress (urn) ; }, 500) ;

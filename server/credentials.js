@@ -20,33 +20,22 @@
 //
 var config ={
 	credentials: {
+        // This sample do not need any keys, as the keys will be passed as argument from the client
+        // Do not do this in your 'production' application ;)
 		client_id: '',
 		client_secret: '',
 		scope:'data:read data:write data:create bucket:create bucket:read',
 		grant_type: 'client_credentials'
 	},
+	fileResumableChunk: 40, // in Mb
 
-	// If you which to use the Autodesk View & Data API on the staging server, change this url
-	BaseEndPoint: 'https://developer.api.autodesk.com',
-	Version: 'v1'
+    clone: function (scope) {
+        var ret =JSON.parse (JSON.stringify (this.credentials)) ;
+        if ( scope !== undefined )
+            ret.scope =scope ;
+        return (ret) ;
+    }
+
 } ;
-
-config.AuthenticateEndPoint =config.BaseEndPoint + '/authentication/' + config.Version + '/authenticate' ;
-
-config.getBucketsDetailsEndPoint =config.BaseEndPoint + '/oss/' + config.Version + '/buckets/%s/details' ;
-config.postBucketsEndPoint =config.BaseEndPoint + '/oss/' + config.Version + '/buckets' ;
-config.putFileUploadEndPoint =config.BaseEndPoint + '/oss/' + config.Version + '/buckets/%s/objects/%s' ;
-config.putFileUploadResumableEndPoint =config.BaseEndPoint + '/oss/' + config.Version + '/buckets/%s/objects/%s/resumable' ;
-config.fileResumableChunk =40 ; // in Mb
-config.getFileDetailsEndPoint =config.BaseEndPoint + '/oss/' + config.Version + '/buckets/%s/objects/%s/details' ;
-
-config.postSetReferencesEndPoint =config.BaseEndPoint + '/references/' + config.Version + '/setreference' ;
-
-config.postRegisterEndPoint =config.BaseEndPoint + '/viewingservice/' + config.Version + '/register' ;
-config.getBubblesEndPoint =config.BaseEndPoint + '/viewingservice/' + config.Version + '/%s' ;
-config.getStatusEndPoint =config.getBubblesEndPoint + '/status' ;
-config.getAllEndPoint =config.getBubblesEndPoint + '/all' ;
-config.getItemsEndPoint =config.BaseEndPoint + '/viewingservice/' + config.Version + '/items/%s' ;
-config.getThumbnailsEndPoint =config.BaseEndPoint + '/viewingservice/' + config.Version + '/thumbnails/%s' ;
 
 module.exports =config ;

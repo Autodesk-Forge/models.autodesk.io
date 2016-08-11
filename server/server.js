@@ -19,7 +19,6 @@
 // UNINTERRUPTED OR ERROR FREE.
 //
 var express =require ('express') ;
-var request =require ('request') ;
 var bodyParser =require ('body-parser') ;
 var favicon =require ('serve-favicon') ;
 var lmvToken =require ('./lmv-token') ;

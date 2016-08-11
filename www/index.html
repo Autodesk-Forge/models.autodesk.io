@@ -33,8 +33,8 @@
                 <header class="inner">
                     <a id="forkme_banner" href="https://github.com/cyrillef/models.autodesk.io">View sources on GitHub</a>
 
-                    <h1 id="project_title"><a href="http://developer-autodesk.github.io/">Developer Autodesk</a></h1>
-                    <h2 id="project_tagline">Large Model Viewer - View &amp; Data API</h2>
+                    <h1 id="project_title"><a href="http://developer-autodesk.github.io/">Autodesk Forge</a></h1>
+                    <h2 id="project_tagline">Forge Viewer & Model Derivatives</h2>
                     <p id="project_tagline2">Just choose a model to upload on your account, or upload your own model.</p>
                 </header>
             </div>
@@ -113,7 +113,7 @@
 
                     <div>
                         <img src="/images/info.png" class="icon" />
-                        <span>Please note that your uploaded models are not visible for others. The list is saved into a cookie
+                        <span>Please note that your uploaded models are not visible to others. The list is saved into a cookie
                             and will be removed from the list once you leave this session.</span>
                     </div>
                 </div>
@@ -153,12 +153,12 @@
 		<div id="accessTokenMainDiv" class="container">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title">This is the token returned by the Autodesk View &amp; Data API serve</h3>
+					<h3 class="panel-title">This is the token returned by the Autodesk Forge Authorization server</h3>
 				</div>
 				<div class="panel-body">
 					<div>
 						<img src="/images/info.png" class="icon" />
-						<p>The Access Token is currently saved into a cookie for the duration of your session and will expire in about 30 minutes.</p>
+						<p>The Access Token is currently saved into a cookie for the duration of your session.</p>
 					</div>
 
 					<label for="accessToken">Access Token:</label>
@@ -171,6 +171,8 @@
     					</div>
                     </div>
 
+                    <br />
+                    <label for="accessToken">Time before expiration:</label>
                     <div id="countdown"></div>
                 </div>
 			</div>
@@ -180,7 +182,7 @@
 
 	<footer>
 		<p>Model as a Service, Accelerating Hackathons!</p>
-		<p>@<a href="http://www.autodesk.com/joinadn" target="_blank">Autodesk Developer Network</a></p>
+		<p>@<a href="http://developer.autodesk.com/" target="_blank">Autodesk Forge</a></p>
 	</footer>
 
 
@@ -212,6 +214,26 @@
                 <div class="modal-body">
                     <img src="/images/warning.png" class="icon" />
                     <span>???</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" id="modal-translationrequested">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">File translation requested, please wait...</h4>
+                </div>
+                <div class="modal-body">
+                    <img src="/images/info.png" class="icon" />
+                    <span>This window will close automatically when the server will have processed your request,
+                        but you can choose to close this dialog now
+                        and eventually choose to start another file translation.</span>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>

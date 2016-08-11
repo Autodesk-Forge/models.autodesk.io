@@ -19,36 +19,43 @@
 // UNINTERRUPTED OR ERROR FREE.
 //
 var express =require ('express') ;
-var request =require ('request') ;
-var unirest =require('unirest') ;
+var ForgeOauth2 =require ('forge-oauth2') ;
 var config =require ('./credentials') ;
 
 var router =express.Router () ;
 
+// This is the downgraded access_token for the viewer (should be read-only)
 router.get ('/token', function (req, res) {
-	config.credentials.client_id =req.query.key ;
-	config.credentials.client_secret= req.query.secret ;
-	unirest.post (config.AuthenticateEndPoint)
-		.header ('Accept', 'application/json')
-		.send (config.credentials)
-		.end (function (response) {
-			if ( response.statusCode != 200 )
-				return (res.status (500).end ()) ;
-			res.json (response.body) ;
-		})
-	;
+    var credentials =config.clone ('data:read') ;
+    credentials.client_id =req.query.key ;
+    credentials.client_secret= req.query.secret ;
+    var apiInstance =new ForgeOauth2.TwoLeggedApi () ;
+    apiInstance.authenticate (credentials.client_id, credentials.client_secret, credentials.grant_type, credentials)
+        .then (function (response) {
+            res.json (response) ;
+        })
+        .catch (function (error) {
+            if ( error.statusCode )
+                return (res.status (error.statusCode).end (error.statusMessage)) ;
+            res.status (500).end () ;
+        })
+    ;
 }) ;
 
+// This is the full access access_token for the application to process/translate files
 router.post ('/token', function (req, res) {
-	config.credentials.client_id =req.body.key ;
-	config.credentials.client_secret= req.body.secret ;
-	unirest.post (config.AuthenticateEndPoint)
-		.header ('Accept', 'application/json')
-		.send (config.credentials)
-		.end (function (response) {
-			if ( response.statusCode != 200 )
-				return (res.status (500).end ()) ;
-			res.json (response.body) ;
+	var credentials =config.clone () ;
+	credentials.client_id =req.query.key ;
+	credentials.client_secret= req.query.secret ;
+	var apiInstance =new ForgeOauth2.TwoLeggedApi () ;
+	apiInstance.authenticate (credentials.client_id, credentials.client_secret, credentials.grant_type, credentials)
+		.then (function (response) {
+			res.json (response) ;
+		})
+		.catch (function (error) {
+			if ( error.statusCode )
+				return (res.status (error.statusCode).end (error.statusMessage)) ;
+			res.status (500).end () ;
 		})
 	;
 }) ;
