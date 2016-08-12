@@ -45,8 +45,8 @@ router.get ('/token', function (req, res) {
 // This is the full access access_token for the application to process/translate files
 router.post ('/token', function (req, res) {
 	var credentials =config.clone () ;
-	credentials.client_id =req.query.key ;
-	credentials.client_secret= req.query.secret ;
+	//credentials.client_id =req.query.key ;
+	//credentials.client_secret= req.query.secret ;
 	var apiInstance =new ForgeOauth2.TwoLeggedApi () ;
 	apiInstance.authenticate (credentials.client_id, credentials.client_secret, credentials.grant_type, credentials)
 		.then (function (response) {
