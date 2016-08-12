@@ -18,7 +18,7 @@
 
 
 <b>Note:</b> For hosting this sample, you do not need any credentials. But anyone using the sample will need
-valid credentials for the translation / extraction process. Visit [the Forge WEB site](https://developer.autodesk.com) for
+valid credentials for the upload /translation process. Visit [the Forge WEB site](https://developer.autodesk.com) for
 instructions to get on-board.
 
 
@@ -26,16 +26,6 @@ instructions to get on-board.
 https://models.autodesk.io/
 
 [![](www/images/app.png)](https://models.autodesk.io/)
-
-
-## Motivation
-
-Our View and Data API Beta adds powerful 2D and 3D viewing functionality to your web apps.
-Our REST and JavaScript API makes it easier to create applications that can view, zoom and interact with 2D and
-3D models from over 60+ model formats with just a web browser, no plugin required!
-
-But what if you wanted to view them and/or use the client API without having to implement the upload/translation protocol.
-This sample will go through all the required steps.
 
 
 ## Description
@@ -120,6 +110,6 @@ This sample is licensed under the terms of the [MIT License](http://opensource.o
 ## Written by
 
 Cyrille Fauvel <br />
-Forge Developer Advocate <br />
+Forge Partner Development <br />
 http://developer.autodesk.com/ <br />
-http://around-the-corner.typepad.com/ <br />
+http://around-the-corner.typepad.com <br />
