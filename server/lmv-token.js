@@ -28,25 +28,19 @@ var router =express.Router () ;
 router.get ('/token', function (req, res) {
     var credentials =config.clone ('data:read') ;
     credentials.client_id =req.query.key ;
-    credentials.client_secret= req.query.secret ;
-    var apiInstance =new ForgeOauth2.TwoLeggedApi () ;
-    apiInstance.authenticate (credentials.client_id, credentials.client_secret, credentials.grant_type, credentials)
-        .then (function (response) {
-            res.json (response) ;
-        })
-        .catch (function (error) {
-            if ( error.statusCode )
-                return (res.status (error.statusCode).end (error.statusMessage)) ;
-            res.status (500).end () ;
-        })
-    ;
+    credentials.client_secret =req.query.secret ;
+    refreshToken (credentials, res) ;
 }) ;
 
 // This is the full access access_token for the application to process/translate files
 router.post ('/token', function (req, res) {
 	var credentials =config.clone () ;
 	credentials.client_id =req.body.key ;
-	credentials.client_secret= req.body.secret ;
+	credentials.client_secret =req.body.secret ;
+	refreshToken (credentials, res) ;
+}) ;
+
+var refreshToken =function (credentials, res) {
 	var apiInstance =new ForgeOauth2.TwoLeggedApi () ;
 	apiInstance.authenticate (credentials.client_id, credentials.client_secret, credentials.grant_type, credentials)
 		.then (function (response) {
@@ -58,6 +52,6 @@ router.post ('/token', function (req, res) {
 			res.status (500).end () ;
 		})
 	;
-}) ;
+} ;
 
 module.exports =router ;

@@ -42,6 +42,9 @@ This sample is dependent of Node.js and few Node.js extensions which would updat
 1. Node.js - built on Chrome's JavaScript runtime for easily building fast, scalable network applications.
    You can get Node.js from [here](http://nodejs.org/)
 
+This sample is also dependent on the client side on couple of javascript library which are installed
+along this sample:
+
 2. filedrop.js - A Self-contained cross-browser HTML5, legacy, AJAX, drag & drop JavaScript file upload, available [here](http://filedropjs.org/).
 
 3. flipclock.js - A flip clock javascript library, available [here](http://flipclockjs.com/).
@@ -60,12 +63,12 @@ The sample was created using Node.js and javascript.
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 
+<a name="setupSample"></a>
 ### Setup
 1. Download and install [Node.js](http://nodejs.org/) (that will install npm as well)
 2. Download this repo anywhere you want (the server will need to write files, so make sure you install in
    a location where you have write permission, at least the 'uploads' folder)
-3. Execute 'npm install', this command will download and install the required node modules automatically for you.
-   These modules are only required for the translation process.<br />
+3. Execute 'npm install', this command will download and install the required node modules automatically for you.<br />
    ```
    npm install
    ```
@@ -81,18 +84,19 @@ The sample was created using Node.js and javascript.
    sudo [PORT=<port>] node start.js
    ```
    <br />
-   <b>Note:</b> the port argument can be omitted and default to port 3000. If port 80 is already in use by another
-   application (like Skype, or IIS, or Apache, ...), you can use any other free port such as 8000, 3000, etc...
-   But in the next section you would need to specify the port to use, i.e. http://localhost[:port]/
+   <b>Note:</b> the port argument can be omitted and default to port 3000. If port 3000 is already in use by another
+   application, you can use any other free port. But in the next section you would need to specify the port to
+   use, i.e. http://localhost[:port]/
 
 
+<a name="UseOfTheSample"></a>
 ### Use of the sample
 
 Translating files
 
-1. Start your favorite browser supporting HTML5 and WEBGL and browse to [http://localhost:3000/](http://localhost:3000/).<br />
+1. Start your favorite browser supporting HTML5 and WEBGL and browse to http://localhost:3000/.<br />
    <b>Note:</b> In case you use a different port above do not forget to include it in the URL. I.e.
-   [http://localhost:8000/](http://localhost:8000/).
+   http://localhost:8000/.
 2. Drag'n Drop your files into the 'Drop area' or browse for individual files, That's it.<br />
    Or choose one of the proposed sample from the Dropbox and click on teh the 'Translate this one for me'.
 3. After the translation completed successfully, you can copy the encoded urn string that you can use to view the

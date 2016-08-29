@@ -188,18 +188,21 @@ function translateProgress (urn) {
 			$('#' + id).remove () ;
 			translatedItem (id, response.name, response.urn) ;
 		} else {
-			$('#' + id + ' progress').val (parseInt (response.progress)) ;
-			setTimeout (function () { translateProgress (urn) ; }, 500) ;
+			if ( $('#' + id) ) {
+				$('#' + id + ' progress').val (parseInt (response.progress)) ;
+				setTimeout (function () { translateProgress (urn) ; }, 500) ;
+			}
 		}
 	}).fail (function (xhr, ajaxOptions, thrownError) {
-		console.log ('Progress request failed!') ;
-		var id =urn.replace (/=+/g, '') ;
-		var filename =$('#' + id + ' span').text () ;
-		$('#' + id).remove () ;
-		$('#translated').append ('<div class="list-group-item" id="' + id + '">'
-			+ '<span>' + filename + '</span>'
-			+ '<span>failed</span>'
-			+ '</div>') ;
+		//console.log ('Progress request failed!') ;
+		//var id =urn.replace (/=+/g, '') ;
+		//var filename =$('#' + id + ' span').text () ;
+		//$('#' + id).remove () ;
+		//$('#translated').append ('<div class="list-group-item" id="' + id + '">'
+		//	+ '<span>' + filename + '</span>'
+		//	+ '<span>failed</span>'
+		//	+ '</div>') ;
+		setTimeout (function () { translateProgress (urn) ; }, 2000) ;
 	}) ;
 } ;
 
