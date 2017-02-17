@@ -46,11 +46,14 @@ router.get ('/translate/:urn/progress', function (req, res) {
 	ForgeModelDerivative.ApiClient.instance.authentications ['oauth2_application'].accessToken =accessToken ;
 	md.getManifest (urn, {})
 		.then (function (data) {
+			var name =path.basename (Buffer.from (data.urn, 'base64').toString ()) ;
+			if ( data.derivatives !== undefined && data.derivatives.length > 0 && data.derivatives [0].hasOwnProperty ('name') )
+				name =data.derivatives [0].name ;
 			res.json ({
 				status: data.status,
 				progress: data.progress,
 				urn: data.urn,
-				name: data.derivatives [0].name
+				name: name
 			}).end () ;
 			console.log ('Request: ' + data.status + ' (' + data.progress + ')') ;
 		})
