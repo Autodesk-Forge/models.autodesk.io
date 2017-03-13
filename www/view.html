@@ -18,16 +18,16 @@
     <script src="https://code.jquery.com/ui/1.11.3/jquery-ui.js"></script> <!-- http://jqueryui.com/ -->
 
     <!-- Autodesk Forge Viewer -->
-    <link href="https://developer.api.autodesk.com/viewingservice/v1/viewers/style.min.css?v=v2.13.1" rel="stylesheet" />
-    <script src="https://developer.api.autodesk.com/viewingservice/v1/viewers/three.min.js?v=v2.13.1"></script>
-    <script src="https://developer.api.autodesk.com/viewingservice/v1/viewers/viewer3D.js?v=v2.13.1"></script>
+    <link href="https://developer.api.autodesk.com/viewingservice/v1/viewers/style.min.css?v=v2.12" rel="stylesheet" />
+    <script src="https://developer.api.autodesk.com/viewingservice/v1/viewers/three.min.js?v=v2.12"></script>
+    <script src="https://developer.api.autodesk.com/viewingservice/v1/viewers/viewer3D.js?v=v2.12"></script>
 
     <!-- Our scripts/css -->
     <link rel="stylesheet" href="./view.css">
 
     <script>
 		$(document).ready (function () {
-			initialize () ;
+			initializeAutodeskViewer () ;
 		}) ;
 
         var QueryString =function () {
@@ -61,7 +61,7 @@
 		var oDocument =null, oViewer =null ;
 		var oViews3D =null, oViews2D =null ;
 
-		function initialize () {
+		function initializeAutodeskViewer () {
 			var options ={ 'getAccessToken': getAccessToken, 'env': 'AutodeskProduction' /*, 'accessToken': '' */ } ;
 			Autodesk.Viewing.Initializer (options, loadModel) ;
 		}
