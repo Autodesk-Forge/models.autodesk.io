@@ -25,6 +25,7 @@ var path =require ('path') ;
 var promisify =require ('es6-promisify') ;
 var stat =promisify (fs.stat) ;
 var readFile =promisify (fs.readFile) ;
+var crypto =require ('crypto') ;
 
 var ForgeOSS =require ('forge-oss') ;
 var ForgeModelDerivative =require ('forge-model-derivative') ;
@@ -73,21 +74,13 @@ function singleUpload (bucketKey, filename, total) {
 	return (ossObjects.uploadObject (bucketKey, objectKey, total, readStream, {})) ;
 }
 
-router.post ('/translate', function (req, res) {
-	var accessToken =req.body.accessToken ;
-	var filename =path.normalize (__dirname + '/../' + req.body.file) ;
-	var bucketKey =
-		  'model'
-		+ new Date ().toISOString ().replace (/T/, '-').replace (/:+/g, '-').replace (/\..+/, '')
-		+ '-' + accessToken.toLowerCase ().replace (/\W+/g, '') ;
-
-	ForgeOSS.ApiClient.instance.authentications ['oauth2_application'].accessToken =accessToken ;
-	ForgeModelDerivative.ApiClient.instance.authentications ['oauth2_application'].accessToken =accessToken ;
-
-	var stats ;
-	stat (filename)
+function ExistOrCreate (bucketKey) {
+	console.log ('Check Bucket if bucket exists...') ;
+	return (ossBuckets.getBucketDetails (bucketKey)
 		.then (function (results) {
-			stats =results ;
+			return (results) ;
+		})
+		.catch (function (error) {
 			console.log ('Create Bucket...') ;
 			var opts ={
 				"bucketKey": bucketKey,
@@ -98,11 +91,32 @@ router.post ('/translate', function (req, res) {
 			} ;
 			return (ossBuckets.createBucket (opts, headers)) ;
 		})
+	) ;
+}
+
+router.post ('/translate', function (req, res) {
+	var accessToken =req.body.accessToken ;
+	var filename =path.normalize (__dirname + '/../' + req.body.file) ;
+	var hash =crypto.createHash ('md5').update (config.credentials.client_id).digest ('hex').replace (/\W+/g, '') ;
+	var bucketKey =
+		  'model'
+		+ new Date ().toISOString ().replace (/T/, '-').replace (/:+/g, '-').replace (/\..+/, '')
+		+ '-' + hash ;
+
+	ForgeOSS.ApiClient.instance.authentications ['oauth2_application'].accessToken =accessToken ;
+	ForgeModelDerivative.ApiClient.instance.authentications ['oauth2_application'].accessToken =accessToken ;
+
+	var stats ;
+	stat (filename)
+		.then (function (results) {
+			stats =results ;
+			return (ExistOrCreate (bucketKey)) ;
+		})
 		.then (function (bucket) {
 			console.log ('async upload') ;
 			var total =stats.size ;
 			var chunkSize =config.fileResumableChunk * 1024 * 1024 ;
-			if ( total <= chunkSize )
+			//if ( total <= chunkSize )
 				return (singleUpload (bucketKey, filename, total)) ;
 			//else
 			//	return (uploadFileAsChunks (bucketKey, filename, total, chunkSize)) ;
