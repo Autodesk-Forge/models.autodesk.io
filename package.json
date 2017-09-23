@@ -42,9 +42,8 @@
     "crypto": "0.0.3",
     "es6-promisify": "*",
     "express": "*",
-    "forge-model-derivative": "*",
-    "forge-oauth2": "*",
-    "forge-oss": "*",
+    "express-session": "^1.15.5",
+    "forge-apis": "^0.4.1",
     "gen-uid": "*",
     "path": "*",
     "serve-favicon": "*"

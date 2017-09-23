@@ -24,7 +24,7 @@ var config ={
         // Do not do this in your 'production' application ;)
 		client_id: '',
 		client_secret: '',
-		scope:'data:read data:write data:create bucket:create bucket:read',
+    scope: ['data:read', 'data:write', 'data:create', 'bucket:create', 'bucket:read'],
 		grant_type: 'client_credentials'
 	},
 	fileResumableChunk: 40, // in Mb
