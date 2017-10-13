@@ -25,7 +25,9 @@ instructions to get on-board.
 ## Live demo at
 https://models.autodesk.io/
 
-[![](www/images/app.png)](https://models.autodesk.io/)
+
+### Thumbnail
+[![thumbnail](www/images/app.png)](https://models.autodesk.io/)
 
 
 ## Description
