@@ -27,7 +27,7 @@ https://models.autodesk.io/
 
 
 ### Thumbnail
-![thumbnail](www/images/app.png)](https://models.autodesk.io/)
+![thumbnail](www/images/app.png)(https://models.autodesk.io/)
 
 
 ## Description
