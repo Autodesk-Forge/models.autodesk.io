@@ -1,32 +1,28 @@
 //
-// Copyright (c) Autodesk, Inc. All rights reserved 
-//
-// Node.js server workflow 
-// by Cyrille Fauvel - Autodesk Developer Network (ADN)
-// January 2015
+// Copyright (c) Autodesk, Inc. All rights reserved
 //
 // Permission to use, copy, modify, and distribute this software in
-// object code form for any purpose and without fee is hereby granted, 
-// provided that the above copyright notice appears in all copies and 
+// object code form for any purpose and without fee is hereby granted,
+// provided that the above copyright notice appears in all copies and
 // that both that copyright notice and the limited warranty and
-// restricted rights notice below appear in all supporting 
+// restricted rights notice below appear in all supporting
 // documentation.
 //
-// AUTODESK PROVIDES THIS PROGRAM "AS IS" AND WITH ALL FAULTS. 
+// AUTODESK PROVIDES THIS PROGRAM "AS IS" AND WITH ALL FAULTS.
 // AUTODESK SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTY OF
-// MERCHANTABILITY OR FITNESS FOR A PARTICULAR USE.  AUTODESK, INC. 
+// MERCHANTABILITY OR FITNESS FOR A PARTICULAR USE.  AUTODESK, INC.
 // DOES NOT WARRANT THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 //
 var express =require ('express') ;
-var ForgeOauth2 =require ('forge-oauth2') ;
 var config =require ('./credentials') ;
+var ForgeApis = require('forge-apis');
 
 var router =express.Router () ;
 
 // This is the downgraded access_token for the viewer (should be read-only)
 router.get ('/token', function (req, res) {
-    var credentials =config.clone ('data:read') ;
+    var credentials =config.clone (['data:read']) ;
     credentials.client_id =req.query.key ;
     credentials.client_secret =req.query.secret ;
     refreshToken (credentials, res) ;
@@ -41,8 +37,8 @@ router.post ('/token', function (req, res) {
 }) ;
 
 var refreshToken =function (credentials, res) {
-	var apiInstance =new ForgeOauth2.TwoLeggedApi () ;
-	apiInstance.authenticate (credentials.client_id, credentials.client_secret, credentials.grant_type, credentials)
+	var oAuth2 =new ForgeApis.AuthClientTwoLegged (credentials.client_id, credentials.client_secret, credentials.scope) ;
+	oAuth2.authenticate ()
 		.then (function (response) {
 			res.json (response) ;
 		})

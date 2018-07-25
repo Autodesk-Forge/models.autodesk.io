@@ -96,6 +96,8 @@ $(document).ready (function () {
 			translate ('uploads/' + file.name) ;
         })
 	;
+
+	new ClipboardJS('.copy');
 }) ;
 
 function HostSetupAccessToken (data) {
@@ -204,25 +206,24 @@ function translateProgress (urn) {
 		//	+ '</div>') ;
 		setTimeout (function () { translateProgress (urn) ; }, 2000) ;
 	}) ;
-} ;
+}
 
 function translatedItem (id, name, urn) {
 	$('#translated').append ('<div class="list-group-item row" id="' + id + '">'
 		+ '<div class="col-md-3">' + decodeURIComponent (name) + '</div>'
 		+ '<div class="col-md-7">'
-		+ '<input type="text" class="form-control" value="' + urn + '" readonly="true" onClick="this.setSelectionRange (0, this.value.length)" oncopy="this.setSelectionRange (0, this.value.length)" />'
+		+ '<input id="' + id + '-urn" type="text" class="form-control" value="' + urn + '" readonly="true" onClick="this.setSelectionRange (0, this.value.length)" oncopy="this.setSelectionRange (0, this.value.length)" />'
 		+ '</div>'
 		+ '<div class="col-md-1">'
-		+ '<button class="form-control copy" data-clipboard-text="' + urn + '" title="Copy the URN to clipboard"><img src="/images/copy.png" /></button>'
+		+ '<button class="form-control copy" data-clipboard-target="#' + id + '-urn" title="Copy the URN to clipboard"><img src="/images/copy.png" /></button>'
         + '</div>'
         + '<div class="col-md-1">'
         + '<button class="form-control view-result" data-clipboard-text="' + urn + '" title="View result"><img src="/images/view.png" /></button>'
         + '</div>'
 	) ;
-	var client =new ZeroClipboard ($('#' + id + ' div button.copy')) ;
+	//var client =new ZeroClipboard ($('#' + id + ' div button.copy')) ;
     $('#' + id + ' div button.view-result').click (function (e) {
         var windowName =$(this).attr ('data-clipboard-text') ;
         window.open ('/view.html?urn=' + encodeURIComponent (windowName) + '&token=' + encodeURIComponent ($('#accessToken').val ()), windowName, "height=768,width=1024") ;
     }) ;
 }
-

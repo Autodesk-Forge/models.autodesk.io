@@ -1,10 +1,6 @@
 //
 // Copyright (c) Autodesk, Inc. All rights reserved
 //
-// Node.js server workflow
-// by Cyrille Fauvel - Autodesk Developer Network (ADN)
-// January 2015
-//
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
 // provided that the above copyright notice appears in all copies and
@@ -24,7 +20,7 @@ var config ={
         // Do not do this in your 'production' application ;)
 		client_id: '',
 		client_secret: '',
-		scope:'data:read data:write data:create bucket:create bucket:read',
+		scope: ['data:read', 'data:write', 'data:create', 'bucket:create', 'bucket:update', 'bucket:read'],
 		grant_type: 'client_credentials'
 	},
 	fileResumableChunk: 40, // in Mb
