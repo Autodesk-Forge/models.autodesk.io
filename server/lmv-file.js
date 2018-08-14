@@ -16,6 +16,7 @@
 //
 var express =require ('express') ;
 var multipart =require ('connect-multiparty') ;
+var fs =require('fs');
 
 var ACCESS_CONTROLL_ALLOW_ORIGIN =false ;
 
