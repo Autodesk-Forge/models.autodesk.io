@@ -26,7 +26,7 @@ instructions to get on-board.
 https://models.autodesk.io/
 
 ### Thumbnail
-[![thumbnail](www/images/app.png)](https://models.autodesk.io/)
+[![thumbnail](/thumbnail.png)](https://models.autodesk.io/)
 
 
 ## Description
