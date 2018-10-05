@@ -43,8 +43,8 @@ var refreshToken =function (credentials, res) {
 			res.json (response) ;
 		})
 		.catch (function (error) {
-			if ( error.statusCode )
-				return (res.status (error.statusCode).end (error.statusMessage)) ;
+			if ( error.statusCode || error.errorCode )
+				return (res.status(error.statusCode || 401).end(error.statusMessage || error.developerMessage));
 			res.status (500).end () ;
 		})
 	;

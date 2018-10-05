@@ -38,19 +38,19 @@
   ],
   "dependencies": {
     "body-parser": "*",
-    "connect-multiparty": "*",
+    "connect-multiparty": "^2.2.0",
     "crypto": "0.0.3",
     "express": "*",
-    "forge-apis": "*",
+    "forge-apis": "^0.4.4",
     "gen-uid": "*",
     "serve-favicon": "*"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
+    "expect.js": "*",
     "mocha": "*",
-    "should": "*",
-    "supertest": "*",
-    "chai": "*",
-    "expect.js": "*"
+    "should": "^13.2.3",
+    "supertest": "^3.3.0"
   },
   "optionalDependencies": {}
 }
