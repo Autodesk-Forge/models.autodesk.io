@@ -2,118 +2,139 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+	<meta charset="UTF-8">
+	<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
+	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 	<title>Autodesk Forge - Translate/View your model without programming</title>
 
-    <meta http-equiv="cache-control" content="max-age=0" />
-    <meta http-equiv="cache-control" content="no-cache" />
-    <meta http-equiv="expires" content="0" />
-    <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
-    <meta http-equiv="pragma" content="no-cache" />
+	<meta http-equiv="cache-control" content="max-age=0" />
+	<meta http-equiv="cache-control" content="no-cache" />
+	<meta http-equiv="expires" content="0" />
+	<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+	<meta http-equiv="pragma" content="no-cache" />
 
-    <!-- External libraries -->
-    <script src="https://code.jquery.com/jquery-2.1.2.js"></script><!-- jquery-2.1.2.min.js -->
-    <script src="https://code.jquery.com/ui/1.11.3/jquery-ui.js"></script> <!-- http://jqueryui.com/ -->
+	<!-- External libraries -->
+	<script src="https://code.jquery.com/jquery-2.1.2.js"></script><!-- jquery-2.1.2.min.js -->
+	<script src="https://code.jquery.com/ui/1.11.3/jquery-ui.js"></script> <!-- http://jqueryui.com/ -->
 
-    <!-- Autodesk Forge Viewer -->
-    <link href="https://developer.api.autodesk.com/derivativeservice/v2/viewers/style.min.css?v=v6.2" rel="stylesheet" />
-    <!-- script src="https://developer.api.autodesk.com/derivativeservice/v2/viewers/three.min.js?v=v5.0"></script -->
-    <script src="https://developer.api.autodesk.com/derivativeservice/v2/viewers/viewer3D.js?v=v6.2"></script>
+	<!-- Autodesk Forge Viewer -->
+	<link href="https://developer.api.autodesk.com/derivativeservice/v2/viewers/style.min.css?v=v7.1"
+		rel="stylesheet" />
+	<!-- script src="https://developer.api.autodesk.com/derivativeservice/v2/viewers/three.min.js?v=v7.1"></script -->
+	<script src="https://developer.api.autodesk.com/derivativeservice/v2/viewers/viewer3D.js?v=v7.1"></script>
 
-    <!-- Our scripts/css -->
-    <link rel="stylesheet" href="./view.css">
+	<!-- Our scripts/css -->
+	<link rel="stylesheet" href="./view.css">
 
-    <script>
-		$(document).ready (function () {
-			initializeAutodeskViewer () ;
-		}) ;
+	<script>
+		$(document).ready(function () {
+			initializeAutodeskViewer();
+		});
 
-        var QueryString =function () {
-            // This function is anonymous, is executed immediately and
-            // the return value is assigned to QueryString!
-            var query_string ={} ;
-            var query =window.location.search.substring (1) ;
-            var vars =query.split("&");
-            for (var i=0;i<vars.length;i++) {
-                var pair =vars [i].split ("=") ;
-                // If first entry with this name
-                if ( typeof query_string [pair [0]] === 'undefined' ) {
-                    query_string [pair [0]] =decodeURIComponent (pair [1]) ;
-                    // If second entry with this name
-                } else if ( typeof query_string [pair [0]] === 'string' ) {
-                    var arr =[ query_string [pair [0]],decodeURIComponent (pair [1]) ] ;
-                    query_string[pair[0]] = arr;
-                    // If third or later entry with this name
-                } else {
-                    query_string [pair [0]].push (decodeURIComponent (pair [1])) ;
-                }
-            }
-            return (query_string) ;
-        } () ;
+		let QueryString = function () {
+			// This function is anonymous, is executed immediately and
+			// the return value is assigned to QueryString!
+			let query_string = {};
+			let query = window.location.search.substring(1);
+			let vars = query.split("&");
+			for (let i = 0; i < vars.length; i++) {
+				let pair = vars[i].split("=");
+				// If first entry with this name
+				if (typeof query_string[pair[0]] === 'undefined') {
+					query_string[pair[0]] = decodeURIComponent(pair[1]);
+					// If second entry with this name
+				} else if (typeof query_string[pair[0]] === 'string') {
+					let arr = [query_string[pair[0]], decodeURIComponent(pair[1])];
+					query_string[pair[0]] = arr;
+					// If third or later entry with this name
+				} else {
+					query_string[pair[0]].push(decodeURIComponent(pair[1]));
+				}
+			}
+			return (query_string);
+		}();
 
-		var urn =QueryString.urn ;
-		function getAccessToken (onGetAccessToken) {
-			onGetAccessToken (QueryString.token, 82000) ;
+		let urn = QueryString.urn;
+
+		function getAccessToken(onGetAccessToken) {
+			onGetAccessToken(QueryString.token, 82000);
 		}
 
-		var oDocument =null, oViewer =null ;
-		var oViews3D =null, oViews2D =null ;
+		let oDocument = null;
+		let oViewer = null;
+		let oViews3D = null;
+		let oViews2D = null;
 
-		function initializeAutodeskViewer () {
-			var options ={ 'getAccessToken': getAccessToken, 'env': 'AutodeskProduction' /*, 'accessToken': '' */ } ;
-			Autodesk.Viewing.Initializer (options, loadModel) ;
+		function initializeAutodeskViewer() {
+			let options = {
+				'getAccessToken': getAccessToken,
+				'env': 'AutodeskProduction' /*, 'accessToken': '' */
+			};
+			Autodesk.Viewing.Initializer(options, loadModel);
 		}
 
-		function loadModel () {
-			var pattern =/^(urn|https?):.*$/g ;
-			if ( !pattern.test (urn) )
-				urn ='urn:' + urn ;
-			pattern =/^(urn):.*$/g ;
-			if ( pattern.test (urn) )
-				Autodesk.Viewing.Document.load (urn, onDocumentLoaded, onError) ;
+		function loadModel() {
+			let pattern = /^(urn|https?):.*$/g;
+			if (!pattern.test(urn))
+				urn = 'urn:' + urn;
+			pattern = /^(urn):.*$/g;
+			if (pattern.test(urn))
+				Autodesk.Viewing.Document.load(urn, onDocumentLoaded, onError);
 			else
-				startViewer (urn, urn.replace (/[^\/]*$/, '')) ;
+				startViewer(urn, urn.replace(/[^\/]*$/, ''));
 		}
 
-		function onDocumentLoaded (doc) {
-			oDocument =doc ;
+		function onDocumentLoaded(doc) {
+			oDocument = doc;
 			// Get all the 3D and 2D views (but keep in separate arrays so we can differentiate in the UI)
-			oViews3D =Autodesk.Viewing.Document.getSubItemsWithProperties (doc.getRootItem (), { 'type': 'geometry', 'role': '3d' }, true) ;
-			oViews2D =Autodesk.Viewing.Document.getSubItemsWithProperties (doc.getRootItem (), { 'type': 'geometry', 'role': '2d' }, true) ;
+			oViews3D = doc.getRoot().search({
+				'type': 'geometry',
+				'role': '3d'
+			});
+			oViews2D = doc.getRoot().search({
+				'type': 'geometry',
+				'role': '2d'
+			});
 			// Load up first a 3D view by default
-			var viewable =null ;
-			if ( oViews3D.length > 0 )
-				viewable =oViews3D [0] ;
-			else if ( oViews2D.length > 0 )
-				viewable =oViews2D [0] ;
+			let viewable = null;
+			if (oViews3D && oViews3D.length > 0)
+				viewable = oViews3D[0];
+			else if (oViews2D && oViews2D.length > 0)
+				viewable = oViews2D[0];
 			else
-				return (alert ('ERROR: No 3D or 2D views found in this document!')) ;
+				return (alert('ERROR: No 3D or 2D views found in this document!'));
 
-			for ( var i =0 ; i < oViews3D.length ; i++ ) {
-				var r =$('<div><button id="view_' + i + '" data="' + oViews3D [i].guid + '">' + oViews3D [i].name + '</button></div>') ;
-				$('#list').append (r) ;
-				$('#view_' + i).click (function (e) { switchView (e, '3d') ; }) ;
+			for (let i = 0; oViews3D && i < oViews3D.length; i++) {
+				let r = $('<div><button id="view_' + i + '" data="' + oViews3D[i].data.guid + '">' + oViews3D[i].data.name +
+					'</button></div>');
+				$('#list').append(r);
+				$('#view_' + i).click(function (e) {
+					switchView(e, '3d');
+				});
 			}
-			for ( var i =0, j =1000 ; i < oViews2D.length ; j++, i++ ) {
-				var r =$('<div><button id="view_' + j + '" data="' + oViews2D [i].guid + '">' + oViews2D [i].name + '</button></div>') ;
-				$('#list').append (r) ;
-				$('#view_' + j).click (function (e) { switchView (e, '2d') ; }) ;
+			for (let i = 0, j = 1000; oViews2D && i < oViews2D.length; j++, i++) {
+				let r = $('<div><button id="view_' + j + '" data="' + oViews2D[i].data.guid + '">' + oViews2D[i].data.name +
+					'</button></div>');
+				$('#list').append(r);
+				$('#view_' + j).click(function (e) {
+					switchView(e, '2d');
+				});
 			}
 
-			startViewer (doc.getViewablePath (viewable), doc.getPropertyDbPath ()) ;
+			startViewer(doc.getViewablePath(viewable), viewable.findPropertyDbPath());
 		}
 
-		function startViewer (svfUrl, sharedPropertyDbPath) {
-			if ( oViewer )
-				return (loadModelInViewer (svfUrl, sharedPropertyDbPath)) ;
+		function startViewer(svfUrl, sharedPropertyDbPath) {
+			if (oViewer)
+				return (loadModelInViewer(svfUrl, sharedPropertyDbPath));
 
-			var modelOptions ={ sharedPropertyDbPath: sharedPropertyDbPath } ;
-			oViewer =new Autodesk.Viewing.Private.GuiViewer3D ($("#viewer") [0]) ;
-			//var pattern =/^(urn):.*$/g ;
+			let modelOptions = {
+				sharedPropertyDbPath: sharedPropertyDbPath
+			};
+			oViewer = new Autodesk.Viewing.Private.GuiViewer3D($("#viewer")[0]);
+			//let pattern =/^(urn):.*$/g ;
 			//if ( pattern.test (urn) ) {
-			oViewer.start (svfUrl, modelOptions, onModelLoaded, onError) ;
+			oViewer.start(svfUrl, modelOptions, onModelLoaded, onError);
 			//} else {
 			//    oViewer.initialize () ;
 			//    oViewer.loadModel (svfUrl, modelOptions, onModelLoaded, onError) ;
@@ -122,45 +143,52 @@
 			//oViewer.addEventListener (Autodesk.Viewing.GEOMETRY_LOADED_EVENT, onViewerGeometryLoaded) ;
 		}
 
-		function loadModelInViewer (svfUrl, sharedPropertyDbPath) {
-			oViewer.tearDown () ;
-			oViewer.setUp (oViewer.config) ;
-			var modelOptions ={ sharedPropertyDbPath: sharedPropertyDbPath } ;
-			oViewer.loadModel (svfUrl, modelOptions, onModelLoaded, onError) ;
+		function loadModelInViewer(svfUrl, sharedPropertyDbPath) {
+			oViewer.tearDown();
+			oViewer.setUp(oViewer.config);
+			let modelOptions = {
+				sharedPropertyDbPath: sharedPropertyDbPath
+			};
+			oViewer.loadModel(svfUrl, modelOptions, onModelLoaded, onError);
 		}
 
-		function onModelLoaded (model) {
+		function onModelLoaded(model) {
+			oViewer;
 		}
 
-		function onError (viewerErrorCode) {
-			alert ('Loading Error #' + viewerErrorCode) ;
+		function onError(viewerErrorCode) {
+			alert('Loading Error #' + viewerErrorCode);
 		}
 
-		function switchView (evt, role) {
-			evt.stopPropagation () ;
-			var index =role === '3d' ? 0 : 1000 ;
-			var views =role === '3d' ? oViews3D : oViews2D ;
+		function switchView(evt, role) {
+			evt.stopPropagation();
+			let index = role === '3d' ? 0 : 1000;
+			let views = role === '3d' ? oViews3D : oViews2D;
 
-			var i =parseInt (evt.target.id.substring (5)) - index ;
-			var guid =views [i].guid ;
+			let i = parseInt(evt.target.id.substring(5)) - index;
+			let guid = views[i].data.guid;
 
-			var viewObj =Autodesk.Viewing.Document.getSubItemsWithProperties (oDocument.getRootItem (), { 'type': 'geometry', 'role': role, 'guid': guid }, true) ;
-			if ( viewObj.length == 0 )
-				return ;
-			var svfUrl =oDocument.getViewablePath (viewObj [0]) ;
-			loadModelInViewer (svfUrl, oDocument.getPropertyDbPath ()) ;
-        }
-
-    </script>
+			let viewObj = oDocument.getRoot().search({
+				'type': 'geometry',
+				'role': role,
+				'guid': guid
+			}, true);
+			if (viewObj.length == 0)
+				return;
+			let svfUrl = oDocument.getViewablePath(viewObj[0]);
+			loadModelInViewer(svfUrl, viewObj[0].findPropertyDbPath());
+		}
+	</script>
 </head>
 
 <body>
-    <div id="project">
-        <div>
-            <div id="viewer" class="left"></div>
-            <div id="list" class="right"></div>
-        </div>
-        <br>
-    </div>
+	<div id="project">
+		<div>
+			<div id="viewer" class="left"></div>
+			<div id="list" class="right"></div>
+		</div>
+		<br>
+	</div>
 </body>
+
 </html>
