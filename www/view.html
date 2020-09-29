@@ -14,14 +14,13 @@
 	<meta http-equiv="pragma" content="no-cache" />
 
 	<!-- External libraries -->
-	<script src="https://code.jquery.com/jquery-2.1.2.js"></script><!-- jquery-2.1.2.min.js -->
-	<script src="https://code.jquery.com/ui/1.11.3/jquery-ui.js"></script> <!-- http://jqueryui.com/ -->
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	<!-- http://jqueryui.com/ -->
 
-	<!-- Autodesk Forge Viewer -->
-	<link href="https://developer.api.autodesk.com/derivativeservice/v2/viewers/style.min.css?v=v7.1"
-		rel="stylesheet" />
-	<!-- script src="https://developer.api.autodesk.com/derivativeservice/v2/viewers/three.min.js?v=v7.1"></script -->
-	<script src="https://developer.api.autodesk.com/derivativeservice/v2/viewers/viewer3D.js?v=v7.1"></script>
+	<!-- Autodesk Forge Viewer files -->
+	<link rel="stylesheet" href="https://developer.api.autodesk.com/modelderivative/v2/viewers/7.*/style.min.css" type="text/css">
+	<script src="https://developer.api.autodesk.com/modelderivative/v2/viewers/7.*/viewer3D.min.js"></script>
 
 	<!-- Our scripts/css -->
 	<link rel="stylesheet" href="./view.css">
@@ -66,10 +65,11 @@
 		let oViews2D = null;
 
 		function initializeAutodeskViewer() {
-			let options = {
-				'getAccessToken': getAccessToken,
-				'env': 'AutodeskProduction' /*, 'accessToken': '' */
+			var options = {
+				env: 'AutodeskProduction',
+				getAccessToken: getAccessToken
 			};
+
 			Autodesk.Viewing.Initializer(options, loadModel);
 		}
 
@@ -77,118 +77,30 @@
 			let pattern = /^(urn|https?):.*$/g;
 			if (!pattern.test(urn))
 				urn = 'urn:' + urn;
-			pattern = /^(urn):.*$/g;
-			if (pattern.test(urn))
-				Autodesk.Viewing.Document.load(urn, onDocumentLoaded, onError);
-			else
-				startViewer(urn, urn.replace(/[^\/]*$/, ''));
+			
+			oViewer = new Autodesk.Viewing.GuiViewer3D(document.getElementById('viewer'), { extensions: [ 'Autodesk.DocumentBrowser'] });
+			oViewer.start();
+			Autodesk.Viewing.Document.load(urn, onDocumentLoaded, onError);
 		}
 
 		function onDocumentLoaded(doc) {
 			oDocument = doc;
-			// Get all the 3D and 2D views (but keep in separate arrays so we can differentiate in the UI)
-			oViews3D = doc.getRoot().search({
-				'type': 'geometry',
-				'role': '3d'
+			
+			var viewables = doc.getRoot().getDefaultGeometry();
+			oViewer.loadDocumentNode(doc, viewables).then(i => {
+				// documented loaded, any action?
 			});
-			oViews2D = doc.getRoot().search({
-				'type': 'geometry',
-				'role': '2d'
-			});
-			// Load up first a 3D view by default
-			let viewable = null;
-			if (oViews3D && oViews3D.length > 0)
-				viewable = oViews3D[0];
-			else if (oViews2D && oViews2D.length > 0)
-				viewable = oViews2D[0];
-			else
-				return (alert('ERROR: No 3D or 2D views found in this document!'));
-
-			for (let i = 0; oViews3D && i < oViews3D.length; i++) {
-				let r = $('<div><button id="view_' + i + '" data="' + oViews3D[i].data.guid + '">' + oViews3D[i].data.name +
-					'</button></div>');
-				$('#list').append(r);
-				$('#view_' + i).click(function (e) {
-					switchView(e, '3d');
-				});
-			}
-			for (let i = 0, j = 1000; oViews2D && i < oViews2D.length; j++, i++) {
-				let r = $('<div><button id="view_' + j + '" data="' + oViews2D[i].data.guid + '">' + oViews2D[i].data.name +
-					'</button></div>');
-				$('#list').append(r);
-				$('#view_' + j).click(function (e) {
-					switchView(e, '2d');
-				});
-			}
-
-			startViewer(doc.getViewablePath(viewable), viewable.findPropertyDbPath());
-		}
-
-		function startViewer(svfUrl, sharedPropertyDbPath) {
-			if (oViewer)
-				return (loadModelInViewer(svfUrl, sharedPropertyDbPath));
-
-			let modelOptions = {
-				sharedPropertyDbPath: sharedPropertyDbPath
-			};
-			oViewer = new Autodesk.Viewing.Private.GuiViewer3D($("#viewer")[0]);
-			//let pattern =/^(urn):.*$/g ;
-			//if ( pattern.test (urn) ) {
-			oViewer.start(svfUrl, modelOptions, onModelLoaded, onError);
-			//} else {
-			//    oViewer.initialize () ;
-			//    oViewer.loadModel (svfUrl, modelOptions, onModelLoaded, onError) ;
-			//}
-			//oViewer.addEventListener (Autodesk.Viewing.TOOLBAR_CREATED_EVENT, onViewerToolbarCreated) ;
-			//oViewer.addEventListener (Autodesk.Viewing.GEOMETRY_LOADED_EVENT, onViewerGeometryLoaded) ;
-		}
-
-		function loadModelInViewer(svfUrl, sharedPropertyDbPath) {
-			oViewer.tearDown();
-			oViewer.setUp(oViewer.config);
-			let modelOptions = {
-				sharedPropertyDbPath: sharedPropertyDbPath
-			};
-			oViewer.loadModel(svfUrl, modelOptions, onModelLoaded, onError);
-		}
-
-		function onModelLoaded(model) {
-			oViewer;
 		}
 
 		function onError(viewerErrorCode) {
 			alert('Loading Error #' + viewerErrorCode);
 		}
 
-		function switchView(evt, role) {
-			evt.stopPropagation();
-			let index = role === '3d' ? 0 : 1000;
-			let views = role === '3d' ? oViews3D : oViews2D;
-
-			let i = parseInt(evt.target.id.substring(5)) - index;
-			let guid = views[i].data.guid;
-
-			let viewObj = oDocument.getRoot().search({
-				'type': 'geometry',
-				'role': role,
-				'guid': guid
-			}, true);
-			if (viewObj.length == 0)
-				return;
-			let svfUrl = oDocument.getViewablePath(viewObj[0]);
-			loadModelInViewer(svfUrl, viewObj[0].findPropertyDbPath());
-		}
 	</script>
 </head>
 
 <body>
-	<div id="project">
-		<div>
-			<div id="viewer" class="left"></div>
-			<div id="list" class="right"></div>
-		</div>
-		<br>
-	</div>
+	<div id="viewer" class="left"></div>
 </body>
 
 </html>
