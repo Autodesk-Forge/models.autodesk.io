@@ -46,9 +46,9 @@
     "serve-favicon": "*"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
+    "chai": "^4.3.3",
     "expect.js": "*",
-    "mocha": "*",
+    "mocha": "^8.3.0",
     "should": "^13.2.3",
     "supertest": "^3.3.0"
   },
