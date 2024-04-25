@@ -14,25 +14,24 @@
 // DOES NOT WARRANT THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 //
-var express =require ('express') ;
-var multipart =require ('connect-multiparty') ;
-var fs =require('fs') ;
+const express = require('express');
+const multipart = require('connect-multiparty');
+const _fs = require('fs');
 
-var ACCESS_CONTROLL_ALLOW_ORIGIN =false ;
+const ACCESS_CONTROLL_ALLOW_ORIGIN = false;
 
-var router =express.Router () ;
-var multipartMiddleware =multipart () ;
+const router = express.Router();
+const multipartMiddleware = multipart();
 
-router.post ('/file', multipartMiddleware, function (req, res) {
+router.post('/', multipartMiddleware, (req, res) => {
 	req
-		.pipe (fs.createWriteStream ('./uploads/' + decodeURIComponent (req.headers ['x-file-name'])))
-		.on ('finish', function (err) {
-			res.end () ;
+		.pipe(_fs.createWriteStream('./uploads/' + decodeURIComponent(req.headers['x-file-name'])))
+		.on('finish', (err) => {
+			res.end();
 		})
-		.on ('error', function (err) {
-			res.status (500).end () ;
-		})
-    ;
-}) ;
+		.on('error', function (err) {
+			res.status(500).end();
+		});
+});
 
-module.exports =router ;
+module.exports = router;

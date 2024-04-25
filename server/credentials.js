@@ -14,10 +14,11 @@
 // DOES NOT WARRANT THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 //
-var config ={
+const config = {
+	
 	credentials: {
-        // This sample do not need any keys, as the keys will be passed as argument from the client
-        // Do not do this in your 'production' application ;)
+		// This sample do not need any keys, as the keys will be passed as argument from the client
+		// Do not do this in your 'production' application ;)
 		client_id: '',
 		client_secret: '',
 		scope: ['data:read', 'data:write', 'data:create', 'bucket:create', 'bucket:update', 'bucket:read'],
@@ -25,13 +26,13 @@ var config ={
 	},
 	fileResumableChunk: 40, // in Mb
 
-    clone: function (scope) {
-        var ret =JSON.parse (JSON.stringify (this.credentials)) ;
-        if ( scope !== undefined )
-            ret.scope =scope ;
-        return (ret) ;
-    }
+	clone: function (scope) {
+		const ret = JSON.parse(JSON.stringify(this.credentials));
+		if (scope !== undefined)
+			ret.scope = scope;
+		return (ret);
+	}
 
-} ;
+};
 
-module.exports =config ;
+module.exports = config;

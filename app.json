@@ -14,6 +14,6 @@
     "app",
     "api"
   ],
-  "website": "https://forge.autodesk.com/",
+  "website": "https://aps.autodesk.com/",
   "success_url": "/"
 }

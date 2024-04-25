@@ -2,245 +2,277 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Autodesk Forge - Translate/View your model without programming</title>
+	<meta charset="UTF-8">
+	<title>Autodesk Platform Services - Translate/View your model without programming</title>
 
-    <!-- External libraries -->
-    <script src="https://code.jquery.com/jquery-2.1.2.js"></script>
-	<script src="/js/jquery.cookie.js"></script>
+	<!-- External libraries -->
+	<script src="https://code.jquery.com/jquery-2.2.4.js"
+		integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+	<script src="/jquery.cookie.js"></script>
 	<!-- Bootstrap CSS -->
-	<link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css" rel="stylesheet" />
-    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+		integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+		crossorigin="anonymous"></script>
+	<link rel="stylesheet"
+		href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-5-theme/1.3.0/select2-bootstrap-5-theme.min.css"
+		integrity="sha512-z/90a5SWiu4MWVelb5+ny7sAayYUfMmdXKEAbpj27PfdkamNdyI3hcjxPxkOPbrXoKIm7r9V2mElt5f1OtVhqA=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-	<script src="/js/flipclock.min.js"></script>
-	<link href="/js/flipclock.css" rel="stylesheet" />
+	<script src="/flipclock.min.js"></script>
+	<link rel="stylesheet" href="/flipclock.css" />
+	<script src="/clipboard.min.js"></script>
+	<link rel="stylesheet" href="/filedrop.css" />
+	<script src="/filedrop.js"></script>
 
-    <script src="js/clipboard.min.js"></script>
-
-    <script src="/js/filedrop.js"></script>
-
-    <!-- Our scripts -->
+	<!-- Our scripts -->
 	<script src="/main.js"></script>
-    <link href="/style.css" rel="stylesheet" />
+	<link href="/style.css" rel="stylesheet" />
 </head>
 
 <body>
 
-	<nav class="navbar navbar-inverse navbar-fixed-top">
+	<!-- Header -->
+	<div class="container-fluid">
 		<div class="container">
-            <div id="header_wrap" class="outer">
-                <header class="inner">
-                    <a id="forkme_banner" href="https://github.com/cyrillef/models.autodesk.io">View sources on GitHub</a>
+			<div class="card position-relative">
+				<a id="forkme_banner" href="https://github.com/cyrillef/models.autodesk.io">View sources on GitHub</a>
+			</div>
 
-                    <h1 id="project_title"><a href="http://developer-autodesk.github.io/">Autodesk Forge</a></h1>
-                    <h2 id="project_tagline">Forge Viewer & Model Derivatives</h2>
-                    <p id="project_tagline2">Just choose a model to upload on your account, or upload your own model.</p>
-                </header>
-            </div>
-		</div>
-	</nav>
-
-	<section id="section-choose-models" class="scrollblock block-choose-models">
-
-		<div id="keysMainDiv" class="container">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">Get an access token</h3>
-				</div>
-				<div class="panel-body">
-					<legend>Enter your Consumer Key and Consumer Secret to get a valid Access token</legend>
-					<div>
-						<img src="/images/warning.png" class="icon" />
-						<p>Sending Consumer key and secret via an http request is not recommended. Be aware of the
-						risk of sending information like this. However, if you are using this tool only once in a while, it should be fine.</p>
-					</div>
-
-					<label for="key">Consumer Key:</label>
-					<input type="text" name="key" id="publicKey" class="form-control" value="" required="required" placeholder="Your consumer key" />
-
-					<label for="secret">Consumer Secret:</label>
-					<input type="password" name="secret" id="secretKey" class="form-control" value="" required="required" placeholder="Your consumer secret" />
-
-					<div class="divForBtnGetAccessToken">
-						<a class="btn btn-danger" id="btnGetAccessToken" data-toggle="modal" href='#modal-embeddingCode'>Get my access token</a>
+			<div class='container-fluid customcolor text-center'>
+				<div class='row justify-content-center'>
+					<div class="col-auto">
+						<div class='text'></div>
+						<h1><a href="http://developer-autodesk.github.io/">Autodesk Platform Services</a></h1>
+						<h2>Viewer & Model Derivatives</h2>
+						<p>Choose a model to upload on your session, or upload your own model.</p>
 					</div>
 				</div>
 			</div>
 		</div>
+	</div>
 
-		<div id="chooseModelsDiv" class="container">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">Load Models on your account</h3>
+	<!-- Get Access Token Form -->
+	<div class="container bg-secondary text-white rounded" id="keys" style="padding-bottom: 15px;">
+
+		<form class="row g-3" style="margin-bottom: 15px;">
+			<h2>Get an access token</h2>
+
+			<div>
+				<label for="key" class="form-label">Client ID</label>
+				<input type="text" class="form-control" name="key" id="key" placeholder="Client ID" required autofocus>
+
+			</div>
+			<div>
+				<label for="secret" class="form-label">Client Secret</label>
+				<input type="password" class="form-control" name="secret" id="secret" placeholder="Client Secret"
+					required>
+			</div>
+
+			<div class="form-floating text-center">
+				<a class="btn btn-danger" id="btnGetAccessToken" data-toggle="modal" href='#modal-embeddingCode'>Get
+					my access token</a>
+				<!-- <button type="submit" class="btn btn-danger">Get my access token</button> -->
+			</div>
+		</form>
+
+		<div class="card" id="warning">
+			<div class="card-header">
+				<h3><img src="/images/warning.png" class="icon" height="32" /> Enter your Client and Secret keys to
+					get a valid Access token is risky</h3>
+			</div>
+			<div class="card-body" style="margin-bottom: 10px;">
+				<p class="card-text">Sending Client and Secret keys via an http request is not recommended.
+					Be aware of the risk of sending sensitive information over the internet. <br />
+					However, if you are using this tool over https once in a while, it should be ok.</p>
+			</div>
+		</div>
+
+	</div>
+
+	<!-- Models -->
+	<div class="container bg-primary text-white rounded" id="urns" style="padding-bottom: 15px; margin-bottom: 15px;">
+		<h2>Available Models on your session</h2>
+
+		<div style="margin-top: 15px;">
+			<div>List of translated models on your session loaded through that web site, during this session</div>
+
+			<div id="translatingDiv" style="margin-top: 20px;">
+				<h5>Currently translating...</h5>
+				<div class="col-md-10 col-md-offset-1">
+					<div id="translating"></div>
 				</div>
-				<div class="panel-body">
-					<legend>Choose one of the model examples below,</legend>
+			</div>
 
-					<label for="inputModellist">Samples:</label>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <select name="modellist" id="inputModellist" class="form-control">
-                                <option value="">-- Select One --</option>
-                                <option value="samples/Chair.dwg">Chair</option>
-                                <option value="samples/Seat.dwf">Seat</option>
-                                <option value="samples/GateHouse.nwd">Gate House</option>
-                                <option value="samples/RobotArm.dwfx">Robot Arm</option>
-                                <option value="samples/Drill.dwfx">Drill</option>
-                            </select>
-					    </div>
-                        <div class="col-md-4">
-						    <a class="btn btn-primary" id="btnTranslateThisOne">Translate this one for me</a>
-                        </div>
-					</div>
+			<div id="translatedDiv" style="margin-top: 20px;">
+				<h5>Ready:</h5>
+				<div class="col-md-10 col-md-offset-1">
+					<div id="translated"></div>
+				</div>
+			</div>
 
-                    <br />
-                    <legend>or upload your own model.</legend>
-                    <!-- A FileDrop area. Can contain any text or elements, or be empty.
-                         Can be of any HTML tag too, not necessary fieldset.
-                    -->
-                    <fieldset id="zone" class="flow-drop">
-                        <p>Drag 'n Drop a file inside&hellip;</p>
-                        <p>Or click here to <em>Browse</em>..</p>
-                        <!--
-                        <p style="z-index: 10; position: relative">
-                        <input type="checkbox" id="multiple">
-                        <label for="multiple">Allow multiple selection</label>
-                        </p>
-                        -->
-                        <progress class="progress" id="bar_zone10" min="0" max="100"></progress>
-                    </fieldset>
+			<div style="margin-top: 20px;">
+				<img src="/images/warning.png" class="icon" height="32" />
+				Remember to save these urn by copying them before closing your session, otherwise you will lose
+				the reference to your translated files.
+			</div>
+		</div>
+	</div>
 
-                    <div>
-                        <img src="/images/info.png" class="icon" />
-                        <span>Please note that your uploaded models are not visible to others. The list is saved into a cookie
-                            and will be removed from the list once you leave this session.</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+	<!-- Sample Models -->
+	<div class="container bg-info text-black rounded" id="models" style="padding-bottom: 15px; margin-bottom: 15px;">
+		<h2 class="panel-title">Load Models on your session</h2>
 
-        <div id="myModelsDiv" class="container">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Available Models on your account</h3>
-                </div>
-                <div class="panel-body">
-                    <legend>List of translated models on your account loaded through that web site, during this session</legend>
-
-					<label>Currently translating...</label>
-					<div class="col-md-10 col-md-offset-1">
-                        <div id="translating" class="list-group"></div>
-                    </div>
-                    <div class="clear"></div>
-
-                    <br />
-                    <label style="float: left;">Ready:</label>
-                    <div class="clear"></div>
-                    <div class="col-md-10 col-md-offset-1">
-                        <div id="translated" class="list-group"></div>
-                    </div>
-                    <div class="clear"></div>
-
-                    <div>
-                        <img src="/images/warning.png" class="icon" />
-                        <p>Remember to save these urn by copying them before closing your session, otherwise you will lose the reference to your translated files.</p>
-                    </div>
+		<div style="margin-top: 15px;">
+			<div>Choose one of the model examples below,</div>
+			<div class="row">
+				<div class="col-md-8">
+					<select name="modellist" id="inputModellist" class="form-control">
+						<option value="">-- Select One --</option>
+						<option value="samples/Chair.dwg">Chair</option>
+						<option value="samples/Seat.dwf">Seat</option>
+						<option value="samples/GateHouse.nwd">Gate House</option>
+						<option value="samples/RobotArm.dwfx">Robot Arm</option>
+						<option value="samples/Drill.dwfx">Drill</option>
+					</select>
+				</div>
+				<div class="col-md-4">
+					<a class="btn btn-primary" id="btnTranslateThisOne">Translate this one for me</a>
 				</div>
 			</div>
 		</div>
 
-		<div id="accessTokenMainDiv" class="container">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">This is the token returned by the Autodesk Forge Authorization server</h3>
+		<div style="margin-top: 10px;">
+			<h2>or upload your own model</h2>
+			<!-- A FileDrop area. Can contain any text or elements, or be empty.
+			     Can be of any HTML tag too, not necessary fieldset.
+			-->
+			<fieldset id="zone" class="flow-drop bg-white rounded" style="margin-bottom: 15px;">
+				<p>Drag'n Drop a file here&hellip;</p>
+				<p>Or click to <em>Browse</em>..</p>
+				<progress class="progress" id="bar_zone10" min="0" max="100" style="position: relative; top: -15px;"></progress>
+			</fieldset>
+
+			<div>
+				<img src="/images/info.png" class="icon" height="32" />
+				<span>Please note that your uploaded models are not visible to others. The list is saved into a cookie
+					and will be removed from the list once you leave this session.</span>
+			</div>
+		</div>
+	</div>
+
+	<!-- Token -->
+	<div class="container bg-secondary text-white rounded" id="accessTokenDiv" style="padding-bottom: 15px;">
+		<h3 class="panel-title">This is the token returned by the APS Authorization server</h3>
+
+		<div style="margin-top: 15px;">
+			<label for="accessToken">Access Token:</label>
+			<div class="row">
+				<div class="col-md-8">
+					<input type="text" name="accessToken" id="accessToken" class="form-control" value=""
+						required="required" readonly="true" />
 				</div>
-				<div class="panel-body">
-					<div>
-						<img src="/images/info.png" class="icon" />
-						<p>The Access Token is currently saved into a cookie for the duration of your session.</p>
-					</div>
-
-					<label for="accessToken">Access Token:</label>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <input type="text" name="accessToken" id="accessToken" class="form-control" value="" required="required" readonly="true" />
-                        </div>
-                        <div class="col-md-4">
-    						<a class="btn btn-danger" id="btnReleaseAccessToken" data-toggle="modal" href='#modal-embeddingCode'>Release the Access Token</a>
-    					</div>
-                    </div>
-
-                    <br />
-                    <label for="accessToken">Time before expiration:</label>
-                    <div id="countdown"></div>
-                </div>
+				<div class="col-md-4">
+					<a class="btn btn-danger" id="btnReleaseAccessToken" data-toggle="modal"
+						href='#modal-embeddingCode'>Release the Access Token</a>
+				</div>
 			</div>
 		</div>
 
-	</section>
+		<div style="margin-top: 25px; height: 150px;" class="position-relative">
+			<div>Time before expiration:</div>
+			<div id="countdown" style="margin-top: 25px; " class="position-absolute top-50 start-50 translate-middle">
+			</div>
+		</div>
 
-	<footer>
-		<p>Model as a Service, Accelerating Hackathons!</p>
-		<p>@<a href="http://developer.autodesk.com/" target="_blank">Autodesk Forge</a></p>
-	</footer>
+		<div>
+			<img src="/images/info.png" class="icon" height="32" />
+			The Access Token is currently saved into a cookie for the duration of your session.
+		</div>
+	</div>
 
+	<!-- Header -->
+	<div class="container">
+		<footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+			<div class="col-md-4 d-flex align-items-center">
+				@<a href="https://aps.autodesk.com/" target="_blank">Autodesk Platform Services</a>
+			</div>
 
-    <div class="modal fade" role="dialog" id="modal-accesstoken">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Your Access Token has now expired</h4>
-                </div>
-                <div class="modal-body">
-                    <img src="/images/info.png" class="icon" />
-                    <span>You did not lose anything, but you need to refresh the token to continue</span>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
+			<div class="col-md-4 justify-content-end list-unstyled d-flex">
+				Model as a Service, Accelerating Hackathons!
+			</div>
+		</footer>
+	</div>
 
-    <div class="modal fade" role="dialog" id="modal-translationfailed">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Your request to translate this file failed</h4>
-                </div>
-                <div class="modal-body">
-                    <img src="/images/warning.png" class="icon" />
-                    <span>???</span>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
+	<!-- Modal Dialogs -->
+	<div class="modal" tabindex="-1" id="modal-accesstoken">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Your Access Token has now expired</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>
+						<img src="/images/info.png" class="icon" height="32" />
+						<span>You did not lose anything, but you need to refresh the token to
+							continue</span>
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <div class="modal fade" role="dialog" id="modal-translationrequested">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">File translation requested, please wait...</h4>
-                </div>
-                <div class="modal-body">
-                    <img src="/images/info.png" class="icon" />
-                    <span>This window will close automatically when the server will have processed your request,
-                        but you can choose to close this dialog now
-                        and eventually choose to start another file translation.</span>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="modal" tabindex="-1" id="modal-translationfailed">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Your request to translate this file failed</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>
+						<img src="/images/warning.png" class="icon" height="32" />
+						<span>Unknown Error</span>
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal" tabindex="-1" id="modal-translationrequested">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">File translation requested, please wait...</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>
+						<img src="/images/info.png" class="icon" height="32" />
+						<span>This window will close automatically when the server will have processed your
+							request,
+							but you can choose to close this dialog now
+							and eventually choose to start another file translation.</span>
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 </body>
+
 </html>
